@@ -8,10 +8,9 @@ parser.add_argument('filename', help="Log file path")
 group = parser.add_mutually_exclusive_group()
 group.add_argument("-u", help="Summary failed login log and sort log by user", action="store_true")
 group.add_argument("-r", help="Sort in reverse order", action="store_true")
-group2 = parser.add_mutually_exclusive_group()
-group2.add_argument("-n", help="Show only the user of most N-th tims", default=-1)
-group2.add_argument("-t", help="Show only the user of attacking equal or more than T times", default=-1)
-parser.add_argument('-after', help="Filter log after date. format YYYY-MM-DD-HH:MM:SS", default="0000-01-01-00-00-00")
+parser.add_argument("-n", help="Show only the user of most N-th tims", default=10000000)
+parser.add_argument("-t", help="Show only the user of attacking equal or more than T times", default=-1)
+parser.add_argument('-after', help="Filter log after date. format YYYY-MM-DD-HH:MM:SS", default="0001-01-01-00-00-00")
 parser.add_argument('-before', help="Filter log before date. format YYYY-MM-DD-HH:MM:SS", default="3000-12-31-12-00-00")
 args = parser.parse_args()
 
@@ -35,18 +34,22 @@ for str in file:
                 dict[s[7]] = 1
 
 dd = {}
-if int(args.n) >= 0:
-    for key in dict.keys():
-        print(key)
-        if dict[key] <= int(args.n):
-            dd[key] = dict[key]
-elif int(args.t) >= 0:
-    for key in dict.keys():
-        print(key)
-        if dict[key] >= int(args.t):
-            dd[key] = dict[key]
-else:
-    dd = dict
+#if int(args.n) >= 0:
+#    for key in dict.keys():
+#        print(key)
+#        if dict[key] <= int(args.n):
+#            dd[key] = dict[key]
+#elif int(args.t) >= 0:
+#    for key in dict.keys():
+#        print(key)
+#        if dict[key] >= int(args.t):
+#            dd[key] = dict[key]
+for key in dict.keys():
+    if int(args.n) >= dict[key] >= int(args.t):
+        dd[key] = dict[key]
+
+#else:
+ #   dd = dict
 
 # Sorting
 if args.u:
